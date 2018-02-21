@@ -1,5 +1,8 @@
 {-# OPTIONS_GHC -Wall #-}
 
+-- Lesson 1 : Credit Card Number validation
+
+
 -- Exercise 1
 
 -- Use modulo to get remainder of X / 10 which gives last digit in list
@@ -14,3 +17,17 @@ toDigits x
 toDigitsRev :: Integer -> [Integer]
 toDigitsRev x = reverse (toDigits x)
 
+
+-- Exercise 2
+
+-- Take a list of Integers, and double every other one
+doubleEveryOther' :: [Integer] -> [Integer]
+doubleEveryOther' [] = []
+doubleEveryOther' [x] = [x]
+doubleEveryOther' (x:y:xs) = 
+    [x] ++ [y * 2] ++ doubleEveryOther' xs 
+
+-- Call doubleEveryOther' but in reverse
+doubleEveryOther :: [Integer] -> [Integer]
+doubleEveryOther xs =
+    reverse ( doubleEveryOther' (reverse xs))
