@@ -48,3 +48,16 @@ getDigits =
 sumDigits :: [Integer] -> Integer
 sumDigits xs = 
     sum $ getDigits xs
+
+
+-- Exercise 4
+
+-- Compose functions using Point Free again
+composeVal :: Integer -> Integer
+composeVal =
+  sumDigits . doubleEveryOther . toDigits
+
+-- Validate Function
+validate :: Integer -> Bool
+validate x =
+    mod (composeVal x) 10 == 0
