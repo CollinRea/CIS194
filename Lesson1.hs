@@ -15,7 +15,8 @@ toDigits x
 -- You can redo the function and put [mod x 10] before recursive call
 -- Or just use built in list reverse function
 toDigitsRev :: Integer -> [Integer]
-toDigitsRev x = reverse (toDigits x)
+toDigitsRev x = 
+    reverse (toDigits x)
 
 
 -- Exercise 2
@@ -31,3 +32,19 @@ doubleEveryOther' (x:y:xs) =
 doubleEveryOther :: [Integer] -> [Integer]
 doubleEveryOther xs =
     reverse ( doubleEveryOther' (reverse xs))
+
+
+-- Exercise 3
+
+-- Get list of single digits
+-- ex [16,7,12,5] = [1, 6, 7, 1, 2, 5]
+-- notice Point Free style using function composition (.)
+getDigits :: [Integer] -> [Integer]
+getDigits =
+    concat . map toDigits
+
+-- Sum all the digits
+-- using normal style with ($) to get rid of parens
+sumDigits :: [Integer] -> Integer
+sumDigits xs = 
+    sum $ getDigits xs
