@@ -9,14 +9,14 @@
 -- Concat that digit in a list to the recursive call to get the remaining digits
 toDigits :: Integer -> [Integer]
 toDigits x 
-    | x <= 0 = []
-    | otherwise = toDigits (div x 10) ++ [mod x 10]
+  | x <= 0 = []
+  | otherwise = toDigits (div x 10) ++ [mod x 10]
 
 -- You can redo the function and put [mod x 10] before recursive call
 -- Or just use built in list reverse function
 toDigitsRev :: Integer -> [Integer]
 toDigitsRev x = 
-    reverse (toDigits x)
+  reverse (toDigits x)
 
 
 -- Exercise 2
@@ -26,12 +26,12 @@ doubleEveryOther' :: [Integer] -> [Integer]
 doubleEveryOther' [] = []
 doubleEveryOther' [x] = [x]
 doubleEveryOther' (x:y:xs) = 
-    [x] ++ [y * 2] ++ doubleEveryOther' xs 
+  [x] ++ [y * 2] ++ doubleEveryOther' xs 
 
 -- Call doubleEveryOther' but in reverse
 doubleEveryOther :: [Integer] -> [Integer]
 doubleEveryOther xs =
-    reverse ( doubleEveryOther' (reverse xs))
+  reverse ( doubleEveryOther' (reverse xs))
 
 
 -- Exercise 3
@@ -41,13 +41,13 @@ doubleEveryOther xs =
 -- notice Point Free style using function composition (.)
 getDigits :: [Integer] -> [Integer]
 getDigits =
-    concat . map toDigits
+  concat . map toDigits
 
 -- Sum all the digits
 -- using normal style with ($) to get rid of parens
 sumDigits :: [Integer] -> Integer
 sumDigits xs = 
-    sum $ getDigits xs
+  sum $ getDigits xs
 
 
 -- Exercise 4
@@ -57,7 +57,24 @@ composeVal :: Integer -> Integer
 composeVal =
   sumDigits . doubleEveryOther . toDigits
 
--- Validate Function
+-- Validate Function - Enter Credit Card #
 validate :: Integer -> Bool
 validate x =
-    mod (composeVal x) 10 == 0
+  mod (composeVal x) 10 == 0
+
+
+-- Exercise 5
+
+-- Tower of Hanoi
+type Peg = String
+
+type Move = (Peg, Peg)
+
+hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
+hanoi n p1 p2 p3
+  | (n == 1) = [(p1,p3)]
+  | otherwise =
+      hanoi (n - 1) p1 p3 p2 
+      ++ hanoi 1 p1 p2 p3 
+      ++ hanoi (n - 1) p2 p1 p3
+  
