@@ -12,3 +12,7 @@ parseMessage s
   where 
         (x:y:xs) = words s
         fstInt = read y :: Int
+
+parse :: String -> [LogMessage]
+parse "" = []
+parse logFile = map parseMessage (lines logFile)
