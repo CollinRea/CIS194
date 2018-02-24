@@ -24,6 +24,7 @@ parse logFile = map parseMessage (lines logFile)
 
 -- Exercise 2
 
+-- Insert a Log Message into a Binary Message Tree
 insert :: LogMessage -> MessageTree -> MessageTree
 insert (Unknown _) mt = mt
 insert m Leaf = Node Leaf m Leaf
@@ -33,3 +34,16 @@ insert m@(LogMessage _ x _) bt@(Node left n@(LogMessage _ y _) right)
     | x > y     = Node left n (insert m right)
     | otherwise = bt
 
+
+-- Exercise 3
+
+-- Build Message Tree from List of Log Messages
+build :: [LogMessage] -> MessageTree
+build [] = Leaf
+build (m:ms) = (insert m (build ms))
+
+-- Test function to read a file and build a MessageTree
+readAndParseAndBuild :: FilePath -> IO MessageTree
+readAndParseAndBuild fileName = do
+  logs <- readFile fileName
+  return $ build $ parse logs 
