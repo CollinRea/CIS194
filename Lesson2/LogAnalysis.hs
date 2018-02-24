@@ -56,3 +56,16 @@ inOrder Leaf = []
 inOrder (Node Leaf m Leaf) = [m]
 inOrder (Node left m right) =
   (inOrder left) ++ [m] ++ (inOrder right)
+
+
+-- Exercise 5
+
+-- Get Errors over 50 severity and return List of those Strings in order
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong [] = []
+whatWentWrong ls =
+  filter (\x -> x /= "") $ map findErrors (inOrder $ build ls)
+  where 
+    findErrors (LogMessage (Error n) _ s)
+      | n > 50 = s
+    findErrors _ = ""
