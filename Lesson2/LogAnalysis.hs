@@ -43,7 +43,16 @@ build [] = Leaf
 build (m:ms) = (insert m (build ms))
 
 -- Test function to read a file and build a MessageTree
-readAndParseAndBuild :: FilePath -> IO MessageTree
+readAndParseAndBuild :: FilePath -> IO [LogMessage]
 readAndParseAndBuild fileName = do
   logs <- readFile fileName
-  return $ build $ parse logs 
+  return $ inOrder $ build $ parse logs
+
+
+-- Exercise 4
+
+inOrder :: MessageTree -> [LogMessage]
+inOrder Leaf = []
+inOrder (Node Leaf m Leaf) = [m]
+inOrder (Node left m right) =
+  (inOrder left) ++ [m] ++ (inOrder right)

@@ -1,3 +1,4 @@
+W 12 Flange 2 failed!
 I 6 Completed armadillo processing
 I 1 Nothing to report
 I 4 Everything normal
@@ -8,4 +9,5 @@ W 5 Flange is due for a check-up
 I 7 Out for lunch, back in two time steps
 E 20 2 Too many pickles
 I 9 Back from lunch
+HELP Something Went Wrong!
 E 99 10 Flange failed!
