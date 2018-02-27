@@ -15,3 +15,12 @@ fun1 (x:xs)
 fun1' :: [Integer] ->  Integer
 fun1' xs = foldr ((*) . subtract 2) 1 $ takeWhile even xs 
 
+
+fun2 :: Integer -> Integer
+fun2 1 = 0
+fun2 n 
+  | even n    = n + fun2 (n `div` 2)
+  | otherwise = fun2 (3 * n + 1)
+
+fun2' :: Integer -> Integer 
+fun2' =  sum . filter even . takeWhile (>1) . iterate (\x -> if odd x then 3 * x + 1 else x `div` 2)
