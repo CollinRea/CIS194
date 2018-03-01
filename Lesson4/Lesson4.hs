@@ -79,7 +79,6 @@ sieveSundaram n = [2 * x + 1 | x <- ([1..n] \\ sieveSundelete n)]
 sieveSundelete :: Integer -> [Integer]
 sieveSundelete n = [x | x <- [i+j+2*i*j | (i,j) <-cartProd [1..n] [1..n], i<=j] , 2*x+2 < n]
 
-
 -- Cartesian product helper function
 cartProd :: [a] -> [b] -> [(a, b)]
 cartProd xs ys = [(x,y) | x <- xs, y <- ys]
