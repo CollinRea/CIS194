@@ -73,11 +73,15 @@ myFoldl f base xs = foldr (flip f) base (reverse xs)
 
 -- Find all Odd prime numbers
 sieveSundaram ::Integer -> [Integer]
-sieveSundaram n = [2 * x + 1 | x <- ([1..n] \\ sieveSundelete n)]
+sieveSundaram n = map (\x -> 2*x+1) $ [1..n] \\ sieveSundelete n
 
 -- Generates list to be deleted
 sieveSundelete :: Integer -> [Integer]
-sieveSundelete n = [x | x <- [i+j+2*i*j | (i,j) <-cartProd [1..n] [1..n], i<=j] , 2*x+2 < n]
+sieveSundelete n = filter (\x -> 2*x+2 < n) $ sieveCalc n
+
+-- List comprehension to generate list of Ints in sieve formulate
+sieveCalc :: Integer -> [Integer]
+sieveCalc n = [x | x <- [i+j+2*i*j | (i,j) <-cartProd [1..n] [1..n], i<=j]]
 
 -- Cartesian product helper function
 cartProd :: [a] -> [b] -> [(a, b)]
