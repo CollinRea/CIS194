@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -Wall #-}
 module Lesson4 where
 
+import Data.List ((\\))
 
 -- Exercise 1 Wholemeal Programming
 
@@ -62,3 +63,25 @@ xor = foldr (\x b -> if x then not b else b) False
 -- Map function implemented with Fold
 map' :: (a -> b) -> [a] -> [b]
 map' f = foldr (\x xs-> f x : xs) []
+
+-- Foldl implemented with foldr
+myFoldl :: (a -> b -> a) -> a -> [b] -> a
+myFoldl f base xs = foldr (flip f) base (reverse xs)
+
+
+-- Exercise 4 Finding primes
+
+-- Find all Odd prime numbers
+sieveSundaram ::Integer -> [Integer]
+sieveSundaram n = [2 * x + 1 | x <- ([1..n] \\ sieveSundelete n)]
+
+-- Generates list to be deleted
+sieveSundelete :: Integer -> [Integer]
+sieveSundelete n = [x | x <- [i+j+2*i*j | (i,j) <-cartProd [1..n] [1..n], i<=j] , 2*x+2 < n]
+
+
+-- Cartesian product helper function
+cartProd :: [a] -> [b] -> [(a, b)]
+cartProd xs ys = [(x,y) | x <- xs, y <- ys]
+
+
