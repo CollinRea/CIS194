@@ -51,3 +51,14 @@ insert v (Node i left x r@(Leaf)) =
 insert v (Node i l@(Node u _ _ _) x r@(Node y _ _ _))
   | u <= y = Node (i + 1) (insert v l) x r
   | otherwise = Node i l x (insert v r)
+
+
+-- Exercise 3 More Folds!
+
+-- Return True only if there are Odd number of Trues in list
+xor :: [Bool] -> Bool
+xor = foldr (\x b -> if x then not b else b) False
+
+-- Map function implemented with Fold
+map' :: (a -> b) -> [a] -> [b]
+map' f = foldr (\x xs-> f x : xs) []
