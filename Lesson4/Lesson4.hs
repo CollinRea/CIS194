@@ -36,7 +36,7 @@ data Tree a
   deriving (Show, Eq)
 
 -- Builds balanced tree using insert helper function
-foldTree :: Eq a => [a] -> Tree a
+foldTree :: [a] -> Tree a
 foldTree = foldr insert Leaf
 
 -- Takes a tree and compares the inner "Nodes" to see which 
