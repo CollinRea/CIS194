@@ -35,26 +35,19 @@ data Tree a
   | Node Integer (Tree a) a (Tree a)
   deriving (Show, Eq)
 
--- foldTree :: [a] -> Tree a
--- foldTree = 
+-- Builds balanced tree using insert helper function
+foldTree :: Eq a => [a] -> Tree a
+foldTree = foldr insert Leaf
 
-insert :: Eq a => a -> Tree a -> Tree a
+-- Takes a tree and compares the inner "Nodes" to see which 
+-- side it should insert in and tries to increment the height
+-- Not currently working properly
+insert :: a -> Tree a -> Tree a
 insert v Leaf = Node 0 Leaf v Leaf
-insert v t@(Node i left x right)
-  | findT == left = Node newHeight (insert v left) x right
-  | findT == right = Node newHeight left x (insert v right)
-  where findT = compareHeight t
-        newHeight = 
-          if left == Leaf && right == Leaf then
-            i
-          else 
-            i + 1 
-
-compareHeight :: Tree a -> Tree a
-compareHeight Leaf = Leaf
-compareHeight (Node 0 left _ _) = left
-compareHeight (Node _ l@(Leaf) _ _) = l
-compareHeight (Node _ (Node _ _ _ _) _ r@(Leaf)) = r
-compareHeight (Node _ l@(Node i _ _ _) _ r@(Node u _ _ _))
-  | i <= u = l
-  | otherwise = r 
+insert v (Node i l@(Leaf) x right) = 
+  Node (i + 1) (insert v l) x right
+insert v (Node i left x r@(Leaf)) = 
+  Node i left x (insert v r)
+insert v (Node i l@(Node u _ _ _) x r@(Node y _ _ _))
+  | u <= y = Node (i + 1) (insert v l) x r
+  | otherwise = Node i l x (insert v r)
