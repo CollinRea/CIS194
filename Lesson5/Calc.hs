@@ -20,5 +20,22 @@ eval (Mul x y) = eval x * eval y
 -- up into the Functor space rather than pattern matching it out
 -- And wrapping it back up 
 evalStr :: String -> Maybe Integer
-evalStr s = (pure eval) <*> par s
+evalStr s = pure eval <*> par s
   where par = parseExp Lit Add Mul
+
+
+-- Exercise 3
+
+-- New Expr Type class
+class Expr a where
+  lit :: a -> ExprT
+  add, mul :: a -> a -> ExprT
+
+-- Not working yet
+instance Expr ExprT where
+  lit x = x
+  add x y = Add x y
+  mul x y = Mul x y
+
+
+
