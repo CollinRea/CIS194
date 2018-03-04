@@ -39,3 +39,20 @@ instance Expr ExprT where
 
 reify :: ExprT -> ExprT
 reify = id
+
+
+-- Exercise 4
+
+-- Instances of Expr for other Types
+
+instance Expr Integer where
+  lit a = a
+  add x y = x + y
+  mul x y = x * y
+
+instance Expr Bool where
+  lit a
+    | a > 0     = True
+    | otherwise = False
+  add x y = x || y
+  mul x y = x && y
