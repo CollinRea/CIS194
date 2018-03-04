@@ -51,8 +51,29 @@ instance Expr Integer where
   mul x y = x * y
 
 instance Expr Bool where
-  lit a
-    | a > 0     = True
-    | otherwise = False
+  lit a = a > 0
   add x y = x || y
   mul x y = x && y
+
+
+newtype MinMax  = MinMax Integer deriving (Eq, Show)
+
+instance Expr MinMax where
+  lit a = MinMax a
+  add (MinMax x) (MinMax y) = MinMax (max x y)
+  mul (MinMax x) (MinMax y) = MinMax (min x y)
+
+newtype Mod7  = Mod7 Integer deriving (Eq, Show)
+
+instance Expr Mod7 where
+  lit a = Mod7 (mod a 7)
+  add (Mod7 x) (Mod7 y) = Mod7 (mod (x + y) 7)
+  mul (Mod7 x) (Mod7 y) = Mod7 (mod (x * y) 7)
+
+testExp :: Expr a => Maybe a
+testExp = parseExp lit add mul "(3 * -4) + 5"
+
+testInteger  = testExp :: Maybe Integer
+testBool     = testExp :: Maybe Bool
+testMM       = testExp :: Maybe MinMax
+testSat      = testExp :: Maybe Mod7
