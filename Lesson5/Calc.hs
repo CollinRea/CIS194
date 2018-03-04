@@ -28,14 +28,14 @@ evalStr s = pure eval <*> par s
 
 -- New Expr Type class
 class Expr a where
-  lit :: a -> ExprT
-  add, mul :: a -> a -> ExprT
+  lit :: Integer -> a
+  add :: a -> a -> a
+  mul :: a -> a -> a
 
--- Not working yet
 instance Expr ExprT where
-  lit x = x
+  lit a = Lit a
   add x y = Add x y
   mul x y = Mul x y
 
-
-
+reify :: ExprT -> ExprT
+reify = id
