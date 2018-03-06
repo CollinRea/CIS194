@@ -94,10 +94,16 @@ testSat = testExp :: Maybe Mod7
 
 -- Stack VM
 instance Expr S.Program where
-  lit a = lit a
-  add x y = add x y
-  mul x y = mul x y
-
+  lit a = [S.PushI a]
+  add x y = x ++ y ++ [S.Add]
+  mul x y = x ++ y ++ [S.Mul]
 
 compile :: String -> Maybe S.Program
 compile = parseExp lit add mul 
+
+testCompile :: String -> Either String S.StackVal
+testCompile s = case (compile s) of
+  Nothing -> Left "Failed to compile"
+  (Just program) -> S.stackVM program
+
+
