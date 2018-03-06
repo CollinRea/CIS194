@@ -107,3 +107,23 @@ testCompile s = case (compile s) of
   (Just program) -> S.stackVM program
 
 
+-- Exercise 6 (Optional)
+
+-- HasVars type class
+class HasVars a where
+  var :: String -> a
+
+data VarExprT = LitV Integer
+              | AddV VarExprT VarExprT
+              | MulV VarExprT VarExprT
+              | Var String
+              deriving (Show, Eq)
+
+instance HasVars VarExprT where
+  var x = Var x
+
+instance Expr VarExprT where
+  lit a = LitV a
+  add x y = AddV x y
+  mul x y = MulV x y
+
