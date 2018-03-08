@@ -134,20 +134,20 @@ instance HasVars (M.Map String Integer -> Maybe Integer) where
 
 instance Expr (M.Map String Integer -> Maybe Integer) where
   lit x   = (\_ -> Just x)
-  add x y = \z -> 
+  add x y = (\z -> 
     case (x z) of
       Nothing -> Nothing
       (Just x') ->
         case (y z) of
           Nothing -> Nothing
-          (Just y') -> Just (x' + y')
-  mul x y = \z -> 
+          (Just y') -> Just (x' + y'))
+  mul x y = (\z -> 
     case (x z) of
       Nothing -> Nothing
       (Just x') ->
         case (y z) of
           Nothing -> Nothing
-          (Just y') -> Just (x' * y')
+          (Just y') -> Just (x' * y'))
 
 
 withVars :: [(String, Integer)] 
