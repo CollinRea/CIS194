@@ -59,5 +59,10 @@ streamFromSeed uf s = Cons s (streamFromSeed uf (uf s))
 nats :: Stream Integer
 nats = streamFromSeed (+1) 0
 
-rulers :: Stream Integer
-rulers = undefined -- WIP
+ruler :: Stream Integer
+ruler = streamMap rulerFunc nats 
+  where rulerFunc n = divCounter (n, 1)
+
+divCounter :: (Integer, Integer) -> Integer
+divCounter (num,pow) = 
+  if num `mod` (2^pow) == 0 then 1 + divCounter (num, pow + 1) else 0
