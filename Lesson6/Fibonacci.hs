@@ -51,3 +51,13 @@ streamMap f (Cons x rest) = Cons (f x) (streamMap f rest)
 
 streamFromSeed :: (a -> a) -> a -> Stream a
 streamFromSeed uf s = Cons s (streamFromSeed uf (uf s))
+
+
+-- Exercise 5
+
+-- Create Streams
+nats :: Stream Integer
+nats = streamFromSeed (+1) 0
+
+rulers :: Stream Integer
+rulers = undefined -- WIP
