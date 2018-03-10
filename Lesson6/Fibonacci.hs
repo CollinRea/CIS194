@@ -61,8 +61,14 @@ nats = streamFromSeed (+1) 0
 
 ruler :: Stream Integer
 ruler = streamMap rulerFunc nats 
-  where rulerFunc n = divCounter (n, 1)
+  where rulerFunc n = divCounter n 1
 
-divCounter :: (Integer, Integer) -> Integer
-divCounter (num,pow) = 
-  if num `mod` (2^pow) == 0 then 1 + divCounter (num, pow + 1) else 0
+divCounter :: Integer -> Integer -> Integer
+divCounter num pow 
+  | num `mod` (2^pow) == 0 = 1 + divCounter num (pow + 1) 
+  | otherwise              = 0
+
+
+-- Exercise 6 (Extra Credit)
+
+-- 
