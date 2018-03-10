@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wall #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 module Fibonacci where
 
@@ -71,4 +72,12 @@ divCounter num pow
 
 -- Exercise 6 (Extra Credit)
 
--- 
+-- Fibonacci Numbers with Streams
+x :: Stream Integer
+x = Cons 0 (Cons 1 (streamRepeat 0))
+
+instance Num (Stream Integer) where
+  fromInteger n = (Cons n (streamRepeat 0))
+  negate s = streamMap (negate) s
+  (+) (Cons n1 r1) (Cons n2 r2) = Cons (n1+n2) ((+) r1 r2)
+  (*) (Cons n1 r1) s2@(Cons n2 r2) = Cons (n1*n2) (streamMap (n1*) r2) + (r1*s2)
