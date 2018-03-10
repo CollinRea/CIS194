@@ -31,3 +31,10 @@ fibs2 = [0,1] ++ next fibs2
 -- Exercise 3
 
 -- Streams
+data Stream a = Cons a (Stream a)
+
+instance Show a => Show (Stream a) where
+  show (Cons x rest) = "(" ++ (show x) ++ "," ++ show rest ++ ")"
+
+streamToList :: Stream a -> [a]
+streamToList (Cons x rest) = x : streamToList rest
