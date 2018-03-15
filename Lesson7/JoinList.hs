@@ -62,3 +62,18 @@ dropJ n (Append _ l1 l2)
   | otherwise           = (dropJ n l1) +++ l2
   where sizel = getSize $ size $ tag l1
   
+-- 3. Take first n of JoinList
+takeJ :: (Sized b, Monoid b) =>
+          Int -> JoinList b a -> JoinList b a
+takeJ _ Empty        = Empty
+takeJ n _ | n <= 0   = Empty
+takeJ n jl | n >= s  = jl
+  where s = getSize $ size $ tag jl
+takeJ n (Append _ l1 l2)
+  | n == sizel  = l1
+  | n > sizel   = l1 +++ (takeJ (n-sizel) l2)
+  | otherwise   = takeJ n l1
+  -- | n == sizel          = l2
+  -- | n > sizel           = takeJ (n - sizel) l2
+  -- | otherwise           = (takeJ n l1) +++ l2
+  where sizel = getSize $ size $ tag l1
