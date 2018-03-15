@@ -33,9 +33,8 @@ indexJ _ Empty          = Nothing
 indexJ i _ | i < 0      = Nothing
 indexJ _ (Single _ _ )  = Nothing
 indexJ i (Append _ l1 l2) 
-  | i < sizel || i == 0       = indexJ i l1
-  | i >= sizel && sizel > 0   = indexJ (i - sizel) l2
-  | otherwise                 = indexJ (i-1) l2
+  | i < sizel = indexJ i l1
+  | otherwise = indexJ (i - sizel) l2
   where sizel = getSize $ size $ tag l1
 
 -- Create List from JoinList
@@ -54,10 +53,12 @@ _      !!? i | i < 0 = Nothing
 -- 2. Drop first n of JoinList
 dropJ :: (Sized b, Monoid b) =>
           Int -> JoinList b a -> JoinList b a
-dropJ n jl | n <= 0   = jl
-dropJ n jl | n >= (getSize $ size $ tag jl) = Empty
+dropJ _ Empty        = Empty
+dropJ n jl | n <= 0  = jl
+dropJ _ (Single _ _) = Empty
 dropJ n (Append _ l1 l2)
-  | n == sizel  = l2
-  | n > sizel   = dropJ (n - sizel) l2
+  | n == sizel          = l2
+  | n > sizel           = dropJ (n - sizel) l2
+  | otherwise           = (dropJ n l1) +++ l2
   where sizel = getSize $ size $ tag l1
   
