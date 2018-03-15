@@ -25,18 +25,18 @@ tag (Append m _ _) = m
 
 -- Excercise 2
 
--- Get value at index of JoinList
+-- 1. Get value at index of JoinList 
 indexJ :: (Sized b, Monoid b) =>
           Int -> JoinList b a -> Maybe a
+indexJ 0 (Single _ v)   = Just v
 indexJ _ Empty          = Nothing
 indexJ i _ | i < 0      = Nothing
-indexJ 0 (Single _ v)   = Just v
 indexJ _ (Single _ _ )  = Nothing
 indexJ i (Append _ l1 l2) 
   | i < sizel || i == 0       = indexJ i l1
   | i >= sizel && sizel > 0   = indexJ (i - sizel) l2
   | otherwise                 = indexJ (i-1) l2
-  where sizel = getSize $ size $ tag $ l1
+  where sizel = getSize $ size $ tag l1
 
 -- Create List from JoinList
 jlToList :: JoinList m a -> [a]
@@ -50,3 +50,14 @@ jlToList (Append _ l1 l2) = jlToList l1 ++ jlToList l2
 _      !!? i | i < 0 = Nothing
 (x:_) !!? 0         = Just x
 (_:xs) !!? i         = xs !!? (i-1)
+
+-- 2. Drop first n of JoinList
+dropJ :: (Sized b, Monoid b) =>
+          Int -> JoinList b a -> JoinList b a
+dropJ n jl | n <= 0   = jl
+dropJ n jl | n >= (getSize $ size $ tag jl) = Empty
+dropJ n (Append _ l1 l2)
+  | n == sizel  = l2
+  | n > sizel   = dropJ (n - sizel) l2
+  where sizel = getSize $ size $ tag l1
+  
