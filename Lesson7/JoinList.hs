@@ -73,7 +73,4 @@ takeJ n (Append _ l1 l2)
   | n == sizel  = l1
   | n > sizel   = l1 +++ (takeJ (n-sizel) l2)
   | otherwise   = takeJ n l1
-  -- | n == sizel          = l2
-  -- | n > sizel           = takeJ (n - sizel) l2
-  -- | otherwise           = (takeJ n l1) +++ l2
   where sizel = getSize $ size $ tag l1
