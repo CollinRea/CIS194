@@ -6,8 +6,6 @@ module Scrabble where
 
 import Data.Monoid
 import Data.Char(toUpper)
--- import Sized
--- import JoinList
 
 -- Exercise 3
 
@@ -34,3 +32,7 @@ score c
 scoreString :: String -> Score
 scoreString []  = Score 0
 scoreString (x:xs) = (score x) + scoreString xs
+
+-- Exercise 4
+
+-- New Notes

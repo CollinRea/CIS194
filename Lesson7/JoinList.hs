@@ -3,6 +3,7 @@
 module JoinList where
 
 import Sized
+import Scrabble
 
 data JoinList m a = Empty
                   | Single m a
@@ -74,3 +75,10 @@ takeJ n (Append _ l1 l2)
   | n > sizel   = l1 +++ (takeJ (n-sizel) l2)
   | otherwise   = takeJ n l1
   where sizel = getSize $ size $ tag l1
+
+
+-- Exercise 3
+
+-- Scrabble Scoreline
+scoreLine :: String -> JoinList Score String
+scoreLine s = Single (scoreString s) s
