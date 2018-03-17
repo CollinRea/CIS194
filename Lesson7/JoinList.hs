@@ -1,5 +1,4 @@
 {-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
-{-# OPTIONS_GHC -Wall #-}
 
 module JoinList where
 
@@ -119,9 +118,8 @@ jlStringToBuff s | length sl > 1
   where sl = lines s
 
 jlReplaceBuff :: Int -> String -> JLBuffer -> JLBuffer
-jlReplaceBuff 0 l b = (fromString l) +++ (dropJ 1 b)
 jlReplaceBuff i l b 
-  | i > bSize   = b
-  | i == bSize  = (takeJ (i - 1) b) +++ (fromString l)
-  | otherwise   = (takeJ (i - 1) b) +++ (fromString l) +++ (dropJ i b)
+  | i >= bSize  = b
+  | i == 0      = (fromString l) +++ (dropJ 1 b)
+  | otherwise   = (takeJ i b) +++ (fromString l) +++ (dropJ (i + 1) b)
   where bSize = getSize $ size $ tag b
