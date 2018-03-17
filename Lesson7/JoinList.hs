@@ -93,7 +93,9 @@ scoreLine s = Single (scoreString s) s
 
 -- Pair of Monoids
 
-instance Buffer (JoinList (Score, Size) String) where
+type JLBuffer = (JoinList (Score, Size) String)
+
+instance Buffer JLBuffer where
   toString    = dropWhile isSpace . jlBuffToString
   fromString  = jlStringToBuff
   line        = indexJ
@@ -102,13 +104,13 @@ instance Buffer (JoinList (Score, Size) String) where
   value b     = val
     where (Score val) = fst $ tag b
 
-jlBuffToString :: JoinList (Score, Size) String -> String
+jlBuffToString :: JLBuffer -> String
 jlBuffToString Empty = ""
 jlBuffToString (Single (_,_) s) ="\n" ++ s
 jlBuffToString (Append (_,_) s1 s2) = 
   (jlBuffToString s1) ++ (jlBuffToString s2)
                   
-jlStringToBuff :: String -> JoinList (Score, Size) String
+jlStringToBuff :: String -> JLBuffer
 jlStringToBuff "" = Empty
 jlStringToBuff s | (length $ lines s) == 1 
   = Single (scoreString s, Size 1) s
@@ -116,9 +118,7 @@ jlStringToBuff s | length sl > 1
   = foldr ((+++) . jlStringToBuff) Empty sl
   where sl = lines s
 
-jlReplaceBuff :: Int -> String 
-              -> JoinList (Score, Size) String 
-              -> JoinList (Score, Size) String
+jlReplaceBuff :: Int -> String -> JLBuffer -> JLBuffer
 jlReplaceBuff 0 l b = (fromString l) +++ (dropJ 1 b)
 jlReplaceBuff i l b 
   | i > bSize   = b
