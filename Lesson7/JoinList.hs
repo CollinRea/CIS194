@@ -6,6 +6,7 @@ module JoinList where
 import Sized
 import Scrabble
 import Buffer
+import Data.Char (isSpace)
 
 data JoinList m a = Empty
                   | Single m a
@@ -93,16 +94,19 @@ scoreLine s = Single (scoreString s) s
 -- Pair of Monoids
 
 instance Buffer (JoinList (Score, Size) String) where
-  toString    = jlBuffToString
+  toString    = dropWhile isSpace . jlBuffToString
   fromString  = jlStringToBuff
   line        = indexJ
-  replaceLine n l b = 
+  replaceLine = jlReplaceBuff
+  numLines    = getSize . size . tag
+  value b     = val
+    where (Score val) = fst $ tag b
 
 jlBuffToString :: JoinList (Score, Size) String -> String
 jlBuffToString Empty = ""
-jlBuffToString (Single (_,_) s) = s
+jlBuffToString (Single (_,_) s) ="\n" ++ s
 jlBuffToString (Append (_,_) s1 s2) = 
-  (jlBuffToString s1) ++ "\n" ++ (jlBuffToString s2) ++ "\n"
+  (jlBuffToString s1) ++ (jlBuffToString s2)
                   
 jlStringToBuff :: String -> JoinList (Score, Size) String
 jlStringToBuff "" = Empty
@@ -112,24 +116,12 @@ jlStringToBuff s | length sl > 1
   = foldr ((+++) . jlStringToBuff) Empty sl
   where sl = lines s
 
-jlReplaceBuff :: (Score mb,Size mb) => 
-                Int -> String -> JoinList (ma, mb) a -> JoinList (ma, mb) a
-jlReplaceBuff i l b = b
-
---   replaceLine n l b = unlines . uncurry replaceLine' . splitAt n . lines $ b
---       where replaceLine' pre [] = pre
---             replaceLine' pre (_:ls) = pre ++ l:ls
---   numLines     = length . lines
---   value        = length . words
-
---   -- | @replaceLine n ln buf@ returns a modified version of @buf@,
---   --   with the @n@th line replaced by @ln@.  If the index is
---   --   out-of-bounds, the buffer should be returned unmodified.
---   replaceLine :: Int -> String -> b -> b
-
---   -- | Compute the number of lines in the buffer.
---   numLines :: b -> Int
-
---   -- | Compute the value of the buffer, i.e. the amount someone would
---   --   be paid for publishing the contents of the buffer.
---   value :: b -> Int
+jlReplaceBuff :: Int -> String 
+              -> JoinList (Score, Size) String 
+              -> JoinList (Score, Size) String
+jlReplaceBuff 0 l b = (fromString l) +++ (dropJ 1 b)
+jlReplaceBuff i l b 
+  | i > bSize   = b
+  | i == bSize  = (takeJ (i - 1) b) +++ (fromString l)
+  | otherwise   = (takeJ (i - 1) b) +++ (fromString l) +++ (dropJ i b)
+  where bSize = getSize $ size $ tag b
