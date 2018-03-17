@@ -18,6 +18,8 @@ data JoinList m a = Empty
 -- Append function or JoinList
 (+++) :: Monoid m => 
         JoinList m a  -> JoinList m a -> JoinList m a
+Empty +++ l2 = l2
+l1 +++ Empty = l1
 l1 +++ l2 = Append (tag l1 `mappend` tag l2) l1 l2
 
 tag :: Monoid m => JoinList m a -> m
@@ -90,8 +92,11 @@ scoreLine s = Single (scoreString s) s
 
 -- Pair of Monoids
 
-instance Buffer (JoinList (Score, Size) String ) where
-  toString = jlBuffToString
+instance Buffer (JoinList (Score, Size) String) where
+  toString    = jlBuffToString
+  fromString  = jlStringToBuff
+  line        = indexJ
+  replaceLine n l b = 
 
 jlBuffToString :: JoinList (Score, Size) String -> String
 jlBuffToString Empty = ""
@@ -99,29 +104,23 @@ jlBuffToString (Single (_,_) s) = s
 jlBuffToString (Append (_,_) s1 s2) = 
   (jlBuffToString s1) ++ "\n" ++ (jlBuffToString s2) ++ "\n"
                   
+jlStringToBuff :: String -> JoinList (Score, Size) String
+jlStringToBuff "" = Empty
+jlStringToBuff s | (length $ lines s) == 1 
+  = Single (scoreString s, Size 1) s
+jlStringToBuff s | length sl > 1 
+  = foldr ((+++) . jlStringToBuff) Empty sl
+  where sl = lines s
 
+jlReplaceBuff :: (Score mb,Size mb) => 
+                Int -> String -> JoinList (ma, mb) a -> JoinList (ma, mb) a
+jlReplaceBuff i l b = b
 
--- instance Buffer String where
---   toString     = id
---   fromString   = id
---   line n b     = safeIndex n (lines b)
 --   replaceLine n l b = unlines . uncurry replaceLine' . splitAt n . lines $ b
 --       where replaceLine' pre [] = pre
 --             replaceLine' pre (_:ls) = pre ++ l:ls
 --   numLines     = length . lines
 --   value        = length . words
-
--- class Buffer b where
-
---   -- | Convert a buffer to a String.
---   toString :: b -> String
-
---   -- | Create a buffer from a String.
---   fromString :: String -> b
-
---   -- | Extract the nth line (0-indexed) from a buffer.  Return Nothing
---   -- for out-of-bounds indices.
---   line :: Int -> b -> Maybe String
 
 --   -- | @replaceLine n ln buf@ returns a modified version of @buf@,
 --   --   with the @n@th line replaced by @ln@.  If the index is
