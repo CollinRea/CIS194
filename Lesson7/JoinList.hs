@@ -95,7 +95,7 @@ scoreLine s = Single (scoreString s) s
 type JLBuffer = (JoinList (Score, Size) String)
 
 instance Buffer JLBuffer where
-  toString    = dropWhile isSpace . jlBuffToString
+  toString    = jlBuffToString
   fromString  = jlStringToBuff
   line        = indexJ
   replaceLine = jlReplaceBuff
