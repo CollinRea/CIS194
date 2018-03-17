@@ -30,7 +30,3 @@ score c
 scoreString :: String -> Score
 scoreString []  = Score 0
 scoreString (x:xs) = (score x) + scoreString xs
-
--- Exercise 4
-
--- New Notes

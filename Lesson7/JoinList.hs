@@ -1,9 +1,11 @@
+{-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
 {-# OPTIONS_GHC -Wall #-}
 
 module JoinList where
 
 import Sized
 import Scrabble
+import Buffer
 
 data JoinList m a = Empty
                   | Single m a
@@ -82,3 +84,53 @@ takeJ n (Append _ l1 l2)
 -- Scrabble Scoreline
 scoreLine :: String -> JoinList Score String
 scoreLine s = Single (scoreString s) s
+
+
+-- Exercise 4
+
+-- Pair of Monoids
+
+instance Buffer (JoinList (Score, Size) String ) where
+  toString = jlBuffToString
+
+jlBuffToString :: JoinList (Score, Size) String -> String
+jlBuffToString Empty = ""
+jlBuffToString (Single (_,_) s) = s
+jlBuffToString (Append (_,_) s1 s2) = 
+  (jlBuffToString s1) ++ "\n" ++ (jlBuffToString s2) ++ "\n"
+                  
+
+
+-- instance Buffer String where
+--   toString     = id
+--   fromString   = id
+--   line n b     = safeIndex n (lines b)
+--   replaceLine n l b = unlines . uncurry replaceLine' . splitAt n . lines $ b
+--       where replaceLine' pre [] = pre
+--             replaceLine' pre (_:ls) = pre ++ l:ls
+--   numLines     = length . lines
+--   value        = length . words
+
+-- class Buffer b where
+
+--   -- | Convert a buffer to a String.
+--   toString :: b -> String
+
+--   -- | Create a buffer from a String.
+--   fromString :: String -> b
+
+--   -- | Extract the nth line (0-indexed) from a buffer.  Return Nothing
+--   -- for out-of-bounds indices.
+--   line :: Int -> b -> Maybe String
+
+--   -- | @replaceLine n ln buf@ returns a modified version of @buf@,
+--   --   with the @n@th line replaced by @ln@.  If the index is
+--   --   out-of-bounds, the buffer should be returned unmodified.
+--   replaceLine :: Int -> String -> b -> b
+
+--   -- | Compute the number of lines in the buffer.
+--   numLines :: b -> Int
+
+--   -- | Compute the value of the buffer, i.e. the amount someone would
+--   --   be paid for publishing the contents of the buffer.
+--   value :: b -> Int
