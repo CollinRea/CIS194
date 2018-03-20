@@ -2,6 +2,7 @@
 module Party where
 
 import Employee
+import Data.Tree
 
 -- Exercise 1
 
@@ -20,3 +21,10 @@ moreFun :: GuestList -> GuestList -> GuestList
 moreFun gl1 gl2 
   | gl1 > gl2 = gl1
   | otherwise = gl2
+
+
+-- Exercise 2
+
+-- Rose Tree Fold function
+treeFold :: (a -> [b] -> b) -> Tree a -> b
+treeFold f (Node rv ts) = f rv $ map (treeFold f) ts
