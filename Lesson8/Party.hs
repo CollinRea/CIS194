@@ -28,3 +28,11 @@ moreFun gl1 gl2
 -- Rose Tree Fold function
 treeFold :: (a -> [b] -> b) -> Tree a -> b
 treeFold f (Node rv ts) = f rv $ map (treeFold f) ts
+
+
+-- Exercise 3
+
+-- Take boss employee and list of pairs of GuestLists
+-- Combine guest lists (1st Pair is with bosses, 2nd pair is without)
+nextLevel :: Employee -> [(GuestList, GuestList)] -> (GuestList, GuestList)
+nextLevel b gls = foldr mappend (b `glCons` mempty,mempty) gls
