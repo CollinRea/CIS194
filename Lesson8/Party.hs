@@ -55,3 +55,12 @@ guestLists (Node e es) =
 maxFun :: Tree Employee -> GuestList
 maxFun = uncurry moreFun . guestLists
 
+
+-- Exercise 5
+
+main :: IO ()
+main = do  
+  company <- readFile "company.txt"
+  let compTree = read company :: Tree Employee
+      gl = maxFun compTree
+  print gl
