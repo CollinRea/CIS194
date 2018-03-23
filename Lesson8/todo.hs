@@ -9,6 +9,7 @@ dispatch =
   [ ("add", add)
   , ("view", view)
   , ("remove", remove)
+  , ("bump", bump)
   ]
 
 -- Interact with the world
@@ -21,7 +22,9 @@ main = do
 -- Action Functions
 
 add :: [String] -> IO ()
-add [fileName, todoItem] = appendFile fileName (todoItem ++ "\n")
+add [fileName, todoItem] = do
+  appendFile fileName (todoItem ++ "\n")
+  view [fileName]
 
 view :: [String] -> IO ()
 view [fileName] = do
@@ -42,4 +45,21 @@ remove [fileName, num] = do
   hClose handle  
   hClose tempHandle  
   removeFile fileName  
-  renameFile tempName fileName  
+  renameFile tempName fileName
+  view [fileName]
+
+bump :: [String] -> IO ()
+bump [fileName, num] = do 
+  handle <- openFile fileName ReadMode  
+  (tempName, tempHandle) <- openTempFile "." "temp"  
+  contents <- hGetContents handle  
+  let number = read num  
+      todoTasks = lines contents  
+      todoToBump = (todoTasks !! number)
+      newTodoItems = todoToBump : delete todoToBump todoTasks 
+  hPutStr tempHandle $ unlines newTodoItems  
+  hClose handle  
+  hClose tempHandle  
+  removeFile fileName  
+  renameFile tempName fileName
+  view [fileName]

@@ -1,3 +1,4 @@
 Pick up kids from school
 Mow the lawn
 Pick up bananas
+Practice writing Haskell
