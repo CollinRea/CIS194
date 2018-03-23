@@ -1,7 +1,11 @@
+{-# OPTIONS_GHC -Wall #-}
+module Todo where
+
 import System.Environment
 import System.Directory
 import System.IO
 import Data.List
+import Data.Time.Clock
 
 -- List of actions that can be taken as first Command line argument
 dispatch :: [(String, [String] -> IO ())]
@@ -15,9 +19,12 @@ dispatch =
 -- Interact with the world
 main :: IO ()
 main = do
-  (command:args) <- getArgs
-  let (Just action) = lookup command dispatch
-  action args
+  a@(command:args) <- getArgs
+  let input = lookup command dispatch
+  case input of
+    Just (action) -> action args
+    Nothing -> errorExit a
+
 
 -- Action Functions
 
@@ -63,3 +70,11 @@ bump [fileName, num] = do
   removeFile fileName  
   renameFile tempName fileName
   view [fileName]
+
+-- Write to error.txt log and display message to user
+errorExit :: [String] -> IO ()
+errorExit args = do
+  time <- getCurrentTime
+  errorArg <- (pure . unwords) args
+  appendFile "errors.txt" (show time ++ " - " ++ errorArg ++ "\n")
+  putStr ("Invalid input: '" ++ errorArg ++ "'")
