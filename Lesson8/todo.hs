@@ -1,4 +1,3 @@
-{-# OPTIONS_GHC -Wall #-}
 module Todo where
 
 import System.Environment
@@ -36,9 +35,9 @@ add [fileName, todoItem] = do
 view :: [String] -> IO ()
 view [fileName] = do
   contents <- readFile fileName
-  let todoTasks = lines contents
-      numberedTasks = zipWith (\n line -> show n ++ " - " ++ line) [0..] todoTasks
-  putStr $ unlines numberedTasks
+  let fileContents = lines contents
+      numberedLines = zipWith (\n line -> show n ++ " - " ++ line) [0..] fileContents
+  putStr $ unlines numberedLines
 
 remove :: [String] -> IO ()
 remove [fileName, num] = do  
@@ -46,9 +45,9 @@ remove [fileName, num] = do
   (tempName, tempHandle) <- openTempFile "." "temp"  
   contents <- hGetContents handle  
   let number = read num  
-      todoTasks = lines contents  
-      newTodoItems = delete (todoTasks !! number) todoTasks  
-  hPutStr tempHandle $ unlines newTodoItems  
+      fileContents = lines contents  
+      newFileContents = delete (fileContents !! number) fileContents  
+  hPutStr tempHandle $ unlines newFileContents  
   hClose handle  
   hClose tempHandle  
   removeFile fileName  
@@ -61,10 +60,10 @@ bump [fileName, num] = do
   (tempName, tempHandle) <- openTempFile "." "temp"  
   contents <- hGetContents handle  
   let number = read num  
-      todoTasks = lines contents  
-      todoToBump = (todoTasks !! number)
-      newTodoItems = todoToBump : delete todoToBump todoTasks 
-  hPutStr tempHandle $ unlines newTodoItems  
+      fileContents = lines contents  
+      lineToBump = (fileContents !! number)
+      newFileContents = lineToBump : delete lineToBump fileContents 
+  hPutStr tempHandle $ unlines newFileContents  
   hClose handle  
   hClose tempHandle  
   removeFile fileName  
