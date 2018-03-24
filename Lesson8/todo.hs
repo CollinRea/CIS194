@@ -3,6 +3,7 @@ module Todo where
 import System.Environment
 import System.Directory
 import System.IO
+import System.IO.Error
 import Data.List
 import Data.Time.Clock
 
@@ -21,7 +22,7 @@ main = do
   a@(command:args) <- getArgs
   let input = lookup command dispatch
   case input of
-    Just (action) -> action args
+    Just (action) -> catchIOError (action args) handleMissingFile
     Nothing -> errorExit a
 
 
@@ -77,3 +78,12 @@ errorExit args = do
   errorArg <- (pure . unwords) args
   appendFile "errors.txt" (show time ++ " - " ++ errorArg ++ "\n")
   putStr ("Invalid input: '" ++ errorArg ++ "'")
+
+-- Error handler
+handleMissingFile :: IOError -> IO ()
+handleMissingFile e
+  | isDoesNotExistError e =
+    case ioeGetFileName e of 
+      Just path -> putStrLn $ "Whoops! File does not exist at: " ++ path
+      Nothing -> putStrLn "Whoops! File does not exist at unknown location!"
+  | otherwise = ioError e
