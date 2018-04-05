@@ -1,0 +1,2 @@
+IO	todo.hs	/^main :: IO ()$/
+deriving	Employee.hs	/^  deriving (Show, Eq)$/
