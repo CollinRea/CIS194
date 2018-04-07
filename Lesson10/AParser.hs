@@ -1,7 +1,3 @@
-{- CIS 194 HW 10
-   due Monday, 1 April
--}
-
 module AParser where
 
 import           Control.Applicative
@@ -57,3 +53,8 @@ posInt = Parser f
 ------------------------------------------------------------
 -- Your code goes below here
 ------------------------------------------------------------
+
+first :: (a -> b) -> (a,c) -> (b,c)
+first f (x,y) = (f x,y)
+
+
