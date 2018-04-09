@@ -1,3 +1,5 @@
+{-# LANGUAGE TypeApplications #-}
+
 module AParser where
 
 import           Control.Applicative
@@ -61,4 +63,5 @@ first f (x,y) = (f x,y)
 instance Functor Parser where
   fmap f (Parser p) = Parser (fmap (first f) . p)
 
-
+instance Applicative Parser where
+	pure = Parser
