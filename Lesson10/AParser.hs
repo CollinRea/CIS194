@@ -80,3 +80,13 @@ abParser_ = const () <$> abParser
 intPair :: Parser [Integer]
 intPair = f <$> posInt <*> char ' ' <*> posInt
       where f a _ b = [a,b]
+
+-- Exercise 4
+instance Alternative Parser where
+  empty = Parser (const Nothing)
+  p1 <|> p2 = Parser f
+    where f s = runParser p1 s <|> runParser p2 s
+
+-- Exercise 5
+intOrUppercase :: Parser ()
+intOrUppercase = const () <$> posInt <|> const () <$> satisfy isUpper
